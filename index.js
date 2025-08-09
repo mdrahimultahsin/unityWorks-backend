@@ -142,11 +142,8 @@ async function run() {
     });
 
     //get single event
-    app.get("/view-event/:id", verifyFirebaseToken, async (req, res) => {
+    app.get("/view-event/:id", async (req, res) => {
       const id = req.params.id;
-      if (req.headers.email !== req.decoded.email) {
-        return res.status(403).send({message: "forbidden access"});
-      }
       const query = {_id: new ObjectId(id)};
       const result = await eventCollection.findOne(query);
       res.send(result);
