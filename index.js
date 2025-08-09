@@ -61,6 +61,9 @@ async function run() {
     const communityCollection = client
       .db("unityworksDB")
       .collection("communities");
+    const subscibeCollection = client
+      .db("unityworksDB")
+      .collection("subscibers");
     app.get("/events", async (req, res) => {
       const category = req.query.category;
       const search = req.query.search;
@@ -210,10 +213,8 @@ async function run() {
     });
     app.patch("/joinCommunity", async (req, res) => {
       try {
-        const {communityId} = req.body; 
+        const {communityId} = req.body;
         const {email} = req.body;
-
-        
 
         const filter = {_id: new ObjectId(communityId)};
         const updateDoc = {
@@ -234,6 +235,14 @@ async function run() {
         res.status(500).json({message: "Internal server error"});
       }
     });
+
+    //subscribe
+    app.post("/subscribe", async (req, res) => {
+      const data = req.body
+      const result = await subscibeCollection.insertOne(data);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ping: 1});
     // console.log(
