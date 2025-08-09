@@ -58,7 +58,9 @@ async function run() {
     const joinedEventCollection = client
       .db("unityworksDB")
       .collection("joinedEvents");
-
+    const communityCollection = client
+      .db("unityworksDB")
+      .collection("communities");
     app.get("/events", async (req, res) => {
       const category = req.query.category;
       const search = req.query.search;
@@ -201,6 +203,11 @@ async function run() {
       res.send(result);
     });
 
+    //community apis
+    app.get("/community", async (req, res) => {
+      const result = await communityCollection.find().toArray();
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ping: 1});
     // console.log(
