@@ -208,6 +208,32 @@ async function run() {
       const result = await communityCollection.find().toArray();
       res.send(result);
     });
+    app.patch("/joinCommunity", async (req, res) => {
+      try {
+        const {communityId} = req.body; 
+        const {email} = req.body;
+
+        
+
+        const filter = {_id: new ObjectId(communityId)};
+        const updateDoc = {
+          $addToSet: {joinedMembers: email},
+        };
+
+        const result = await communityCollection.updateOne(filter, updateDoc);
+
+        if (result.modifiedCount === 0) {
+          return res
+            .status(404)
+            .json({message: "Community not found or already joined"});
+        }
+
+        res.json({message: "Successfully joined the community"});
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({message: "Internal server error"});
+      }
+    });
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ping: 1});
     // console.log(
